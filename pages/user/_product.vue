@@ -59,7 +59,13 @@
           {{ productDiscription }}
         </p>
 
-        <v-btn block type="submit" color="primary">Add To Cart</v-btn>
+        <v-btn
+          block
+          type="submit"
+          color="primary"
+          @click="addToCart(productModelNo)"
+          >Add To Cart</v-btn
+        >
       </v-col>
     </v-row>
     <v-row dense justify="center">
@@ -168,6 +174,81 @@ export default {
           console.log(product)
         }
       )
+    },
+    // method will add selected products data to users profile on db (data will be fetched first to send off to profiles)
+    async addToCart(modelNo) {
+      const uid = this.$store.getters['cart/getUid']
+      await db
+        .ref(`adminUserName/products/${modelNo}`)
+        .on('value', (snapshot) => {
+          const data = snapshot.val()
+          if (data) {
+            // const temp = Object.keys(data).map((i) => data[i])
+            this.sproduct = data
+            // eslint-disable-next-line no-console
+            console.log(uid)
+            db.ref(`users/${uid}/cartProduct/${modelNo}`).once(
+              'value',
+              (snapshot) => {
+                const data = snapshot.val()
+                if (data) {
+                  // eslint-disable-next-line no-console
+                  console.log('in condition of cart is there or not')
+                } else {
+                  db.ref(`users/${uid}/cartProduct/${modelNo}`)
+                    .set(this.sproduct)
+                    .then(() => {
+                      // eslint-disable-next-line no-console
+                      console.log('success adding cart model no ' + modelNo)
+                      this.$store.commit('cart/incCartCount')
+                      let temp = this.$cookies.get('cartCount')
+                      this.$cookies.set('cartCount', ++temp)
+                    })
+                    .catch((error) => {
+                      // eslint-disable-next-line no-console
+                      console.log(
+                        'Error deleting cart model no ' + modelNo,
+                        error
+                      )
+                      // TODO: make alert tost when there is failur in adding data to firestore
+                      // this.alert = true
+                      // setTimeout(() => {
+                      //   this.alert = false
+                      // }, 5000)
+                    })
+                }
+              }
+            )
+          }
+        })
+      // COMPLATED: WORKED ON THE FUNCTION FOR FETCHIING AND STORING DATA OF PRODUCT IN THE CART
+      // const uid = this.$store.getters['cart/getUid']
+      // eslint-disable-next-line no-console
+      // console.log(uid)
+      // const updates = {}
+      // updates[`/${modelNo}`] = this.sproduct
+
+      // db.ref(`users/${uid}/cartProduct`)
+      //   .update(updates)
+      // db.ref(`users/${uid}/cartProduct/${modelNo}`)
+      //   .set(this.sproduct)
+      //   .then(() => {
+      //     // eslint-disable-next-line no-console
+      //     console.log('success adding cart model no ' + modelNo)
+
+      //     this.$store.commit('cart/incCartCount')
+      //     let temp = this.$cookies.get('cartCount')
+      //     this.$cookies.set('cartCount', ++temp)
+      //   })
+      //   .catch((error) => {
+      //     // eslint-disable-next-line no-console
+      //     console.log('Error deleting cart model no ' + modelNo, error)
+      //     // make alert tost when there is failur in adding data to firestore
+      //     // this.alert = true
+      //     // setTimeout(() => {
+      //     //   this.alert = false
+      //     // }, 5000)
+      //   })
     },
   },
 }

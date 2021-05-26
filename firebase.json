@@ -1,0 +1,21 @@
+{
+  "functions": {
+    "source": "functions",
+    "predeploy": ["npm run build", "./predeploy-functions.bat"]
+  },
+  "hosting": {
+    "public": "public",
+    "predeploy": ["./predeploy-hosting.bat"],
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "function": "ssrapp"
+      }
+    ]
+  }
+}

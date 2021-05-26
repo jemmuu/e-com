@@ -140,25 +140,39 @@ export default {
           this.$cookies.set('logedIn', true)
           this.$store.commit('auth/setLogedIn', true)
           this.$store.commit('cart/setUid', res.user.uid)
-          db.ref(`users/${res.user.uid}/cartProduct`).on(
-            'value',
-            (snapshot) => {
-              const data = snapshot.val()
-              if (data) {
-                // eslint-disable-next-line no-console
-                console.log(data)
-                const products = Object.keys(data).map((i) => data[i])
-                this.$store.commit('cart/setCartCount', products.length)
-                this.$cookies.set('cartCount', products.length)
-                // eslint-disable-next-line no-console
-                console.log(products)
-              } else {
-                this.$store.commit('cart/setCartCount', null)
-                this.$cookies.set('cartCount', null)
-              }
+          db.ref(`users/${res.user.uid}`).on('value', (snapshot) => {
+            const data = snapshot.val()
+            // eslint-disable-next-line no-console
+            console.log(data)
+            if (data.admin) {
+              this.$store.commit('auth/setAdmin', true)
+              this.$cookies.set('admin', true)
             }
-          )
-          this.$router.push('/')
+            if (data.cartProduct) {
+              const products = Object.keys(data.cartProduct).map(
+                (i) => data.cartProduct[i]
+              )
+              this.$store.commit('cart/setCartCount', products.length)
+              this.$cookies.set('cartCount', products.length)
+              // eslint-disable-next-line no-console
+              console.log(products)
+            } else {
+              this.$store.commit('cart/setCartCount', null)
+              this.$cookies.set('cartCount', null)
+            }
+          })
+          // eslint-disable-next-line no-console
+          console.log(this.$cookies.get('admin'))
+          if (!this.$cookies.get('admin')) {
+            // eslint-disable-next-line no-console
+            console.log(this.$cookies.get('admin') + 'from user condition')
+            this.$router.push('/')
+          }
+          if (this.$cookies.get('admin')) {
+            // eslint-disable-next-line no-console
+            console.log(this.$cookies.get('admin') + 'from the admin condition')
+            this.$router.push('/admin/adminPanel')
+          }
         })
         .catch(() => {
           this.alert = true

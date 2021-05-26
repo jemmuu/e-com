@@ -1,0 +1,62 @@
+[
+  {
+    "name": "inspire",
+    "path": "/inspire",
+    "component": "J:\\\\nuxt app\\\\e-com\\\\pages\\\\inspire.vue",
+    "chunkName": "pages/inspire"
+  },
+  {
+    "name": "team",
+    "path": "/team",
+    "component": "J:\\\\nuxt app\\\\e-com\\\\pages\\\\team.vue",
+    "chunkName": "pages/team"
+  },
+  {
+    "name": "admin-addProduct",
+    "path": "/admin/addProduct",
+    "component": "J:\\\\nuxt app\\\\e-com\\\\pages\\\\admin\\\\addProduct.vue",
+    "chunkName": "pages/admin/addProduct"
+  },
+  {
+    "name": "admin-productList",
+    "path": "/admin/productList",
+    "component": "J:\\\\nuxt app\\\\e-com\\\\pages\\\\admin\\\\productList.vue",
+    "chunkName": "pages/admin/productList"
+  },
+  {
+    "name": "auth-login",
+    "path": "/auth/login",
+    "component": "J:\\\\nuxt app\\\\e-com\\\\pages\\\\auth\\\\login.vue",
+    "chunkName": "pages/auth/login"
+  },
+  {
+    "name": "auth-register",
+    "path": "/auth/register",
+    "component": "J:\\\\nuxt app\\\\e-com\\\\pages\\\\auth\\\\register.vue",
+    "chunkName": "pages/auth/register"
+  },
+  {
+    "name": "user-cart",
+    "path": "/user/cart",
+    "component": "J:\\\\nuxt app\\\\e-com\\\\pages\\\\user\\\\cart.vue",
+    "chunkName": "pages/user/cart"
+  },
+  {
+    "name": "admin-editProductModelNo",
+    "path": "/admin/:editProductModelNo?",
+    "component": "J:\\\\nuxt app\\\\e-com\\\\pages\\\\admin\\\\_editProductModelNo.vue",
+    "chunkName": "pages/admin/_editProductModelNo"
+  },
+  {
+    "name": "user-product",
+    "path": "/user/:product?",
+    "component": "J:\\\\nuxt app\\\\e-com\\\\pages\\\\user\\\\_product.vue",
+    "chunkName": "pages/user/_product"
+  },
+  {
+    "name": "index",
+    "path": "/",
+    "component": "J:\\\\nuxt app\\\\e-com\\\\pages\\\\index.vue",
+    "chunkName": "pages/index"
+  }
+]

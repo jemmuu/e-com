@@ -13,6 +13,10 @@ export const actions = {
         const logedIn = $cookies.get('logedIn')
         commit('auth/setLogedIn', logedIn)
       }
+      if ($cookies.get('admin')) {
+        const admin = $cookies.get('admin')
+        commit('auth/setAdmin', admin)
+      }
     }
   },
 }

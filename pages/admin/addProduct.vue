@@ -133,6 +133,7 @@
 <script>
 import { storage, db } from '../../plugins/firebase'
 export default {
+  layout: 'adminLayout',
   data() {
     const defaultForm = Object.freeze({
       productName: null,

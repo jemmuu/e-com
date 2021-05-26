@@ -69,7 +69,7 @@ export default {
   },
   data() {
     return {
-      products: [], // all product data array from db
+      // products: [], // all product data array from db
       sortArray: [], // array after sort and filter from searchbox
       sort: [
         'Sort By',
@@ -93,8 +93,14 @@ export default {
     // eslint-disable-next-line no-console
     console.log(this.products)
   },
+  watch: {
+    products(newvalue) {
+      // eslint-disable-next-line no-self-assign
+      this.sortArray = this.products
+    },
+  },
   // computed: {
-  //   ...mapGetters({
+  //   // ...mapGetters({
   //     searchQuery: 'getSearch',
   //   }),
   // },
@@ -108,7 +114,7 @@ export default {
     // unction filter array as user input in search box
     search(string) {
       // eslint-disable-next-line no-console
-      // console.log(string.length + ' got change here')
+      console.log(string.length + ' got change here')
       if (string.length !== 0) {
         // eslint-disable-next-line no-console
         console.log(
@@ -120,7 +126,7 @@ export default {
         this.sortArray = this.sortArray.filter((x) => {
           return x.name.match(string)
         })
-      }
+      } else this.sortArray = this.products
     },
     // function to sort array as per selected sort
     sortMethod() {

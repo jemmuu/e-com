@@ -5,6 +5,7 @@
     :loading="false"
     class="mx-auto my-12"
     max-width="374"
+    min-width="374"
   >
     <v-carousel
       continuous
@@ -117,7 +118,10 @@
     >
     <!-- hover to activate price sheet that transit on product mage \\ hover area start here -->
     <v-hover v-slot="{ hover }">
-      <v-card-text :v-if="hover ? hoverTrue() : hoverFalse()">
+      <v-card-text
+        :v-if="hover ? hoverTrue() : hoverFalse()"
+        @click="$router.push(`/user/${product.modelNo}`)"
+      >
         <v-row align="center" class="mx-0"> By {{ product.company }}</v-row>
         <v-row align="center" class="mx-0">
           <v-rating
@@ -185,24 +189,38 @@ export default {
             this.sproduct = data
             // eslint-disable-next-line no-console
             console.log(uid)
-            db.ref(`users/${uid}/cartProduct/${modelNo}`)
-              .set(this.sproduct)
-              .then(() => {
-                // eslint-disable-next-line no-console
-                console.log('success adding cart model no ' + modelNo)
-                this.$store.commit('cart/incCartCount')
-                let temp = this.$cookies.get('cartCount')
-                this.$cookies.set('cartCount', ++temp)
-              })
-              .catch((error) => {
-                // eslint-disable-next-line no-console
-                console.log('Error deleting cart model no ' + modelNo, error)
-                // TODO: make alert tost when there is failur in adding data to firestore
-                // this.alert = true
-                // setTimeout(() => {
-                //   this.alert = false
-                // }, 5000)
-              })
+            db.ref(`users/${uid}/cartProduct/${modelNo}`).once(
+              'value',
+              (snapshot) => {
+                const data = snapshot.val()
+                if (data) {
+                  // eslint-disable-next-line no-console
+                  console.log('in condition of cart is there or not')
+                } else {
+                  db.ref(`users/${uid}/cartProduct/${modelNo}`)
+                    .set(this.sproduct)
+                    .then(() => {
+                      // eslint-disable-next-line no-console
+                      console.log('success adding cart model no ' + modelNo)
+                      this.$store.commit('cart/incCartCount')
+                      let temp = this.$cookies.get('cartCount')
+                      this.$cookies.set('cartCount', ++temp)
+                    })
+                    .catch((error) => {
+                      // eslint-disable-next-line no-console
+                      console.log(
+                        'Error deleting cart model no ' + modelNo,
+                        error
+                      )
+                      // TODO: make alert tost when there is failur in adding data to firestore
+                      // this.alert = true
+                      // setTimeout(() => {
+                      //   this.alert = false
+                      // }, 5000)
+                    })
+                }
+              }
+            )
           }
         })
       // COMPLATED: WORKED ON THE FUNCTION FOR FETCHIING AND STORING DATA OF PRODUCT IN THE CART

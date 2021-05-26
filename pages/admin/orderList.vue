@@ -1,10 +1,9 @@
 <template>
   <v-app>
     <!-- main card which hold table of product list -->
-    <!-- TODO: product quentity will be added in further versions -->
     <v-card elevation="0" style="margin: 30px">
       <v-card-title>
-        Product List
+        Order List
         <v-spacer></v-spacer>
         <v-text-field
           v-model="search"
@@ -13,39 +12,25 @@
           single-line
           hide-details
         ></v-text-field>
-        <v-tooltip bottom>
-          <template #activator="{ on, attrs }">
-            <v-btn
-              x-small
-              fab
-              class="mt-4 ml-1"
-              color="primary"
-              to="/admin/addProduct"
-              v-bind="attrs"
-              v-on="on"
-            >
-              <v-icon>mdi-plus</v-icon>
-            </v-btn>
-          </template>
-          <span>Add product</span>
-        </v-tooltip>
       </v-card-title>
-      <v-data-table :headers="headers" :items="products" :search="search">
+      <v-data-table :headers="headers" :items="orders" :search="search">
         <template #item="props">
           <tr>
-            <td>{{ props.item.name }}</td>
-            <td>{{ props.item.company }}</td>
-            <td>{{ props.item.category }}</td>
-            <td>{{ props.item.type }}</td>
-            <td>{{ props.item.modelNo }}</td>
+            <td>{{ props.item.orderNo }}</td>
+            <td>{{ props.item.custName }}</td>
+            <!-- <td>{{ props.item.productcategory }}</td> -->
+            <td>{{ print(props.item.productcategory) }}</td>
+            <td>{{ props.item.orderType }}</td>
+            <td>{{ print(props.item.modelNos) }}</td>
             <td>
-              {{ props.item.price }} <v-icon small>mdi-currency-inr</v-icon>
+              {{ props.item.totalAmount
+              }}<v-icon small>mdi-currency-inr</v-icon>
             </td>
             <td>
               <v-icon
                 small
                 class="mr-2"
-                @click="editProduct(props.item.modelNo)"
+                @click="editProduct(props.item.orderNo)"
               >
                 mdi-pencil
               </v-icon>
@@ -77,33 +62,54 @@ export default {
       search: '', // hold search input value
       headers: [
         {
-          text: 'Product Name',
+          text: 'Order No',
           align: 'start',
-          value: 'name',
+          value: 'orderNo',
         },
-        { text: 'Company Name', value: 'company' },
-        { text: 'Product Category', value: 'category' },
-        { text: 'Type', value: 'type' },
-        { text: 'Model No', value: 'modelNo' },
-        { text: 'Price', value: 'price' },
+        { text: 'Customer Name', value: 'custName' },
+        { text: 'Product Category', value: 'productcategory' },
+        { text: 'Order Type', value: 'orderType' },
+        { text: 'Model Nos', value: 'modelNos' },
+        { text: 'Total Amount', value: 'totalAmount' },
         { text: 'Actions', value: 'action', sortable: false },
       ], // array for table
-      products: [], // hold product data
+      orders: [], // hold product data
       temp: null, // to use in function
     }
   },
   // to load product data
   async fetch() {
-    await db.ref('adminUserName/products').on('value', (snapshot) => {
-      const data = snapshot.val()
-      if (data) {
-        this.products = Object.keys(data).map((i) => data[i])
-      }
-    })
     // eslint-disable-next-line no-console
-    console.log(this.products)
+    console.log(this.$route.params.orderlistType)
+    await db
+      .ref('adminUserName/orders')
+      .orderByChild('orderProccess')
+      .equalTo('proccess')
+      .on('value', (snapshot) => {
+        const data = snapshot.val()
+        if (data) {
+          // eslint-disable-next-line no-console
+          console.log(data)
+          this.orders = Object.keys(data).map((i) => data[i])
+        }
+      })
+    // eslint-disable-next-line no-console
+    console.log(this.orders)
+  },
+  created() {
+    // eslint-disable-next-line no-console
+    console.log(this.$route.params.orderlistType)
   },
   methods: {
+    print(object) {
+      const temp = Object.keys(object).map((i) => object[i])
+      let string = ''
+      for (const data of temp) {
+        string = string + data + ','
+      }
+      return string
+      //   return object
+    },
     // redired to edit product page
     editProduct(no) {
       this.$router.push(`/admin/${no}`)

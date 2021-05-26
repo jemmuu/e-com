@@ -1,0 +1,14 @@
+{
+  "BillingCard": {
+    "description": "Auto imported from components/billingCard.vue"
+  },
+  "CartCard": {
+    "description": "Auto imported from components/cartCard.vue"
+  },
+  "ProductCard": {
+    "description": "Auto imported from components/productCard.vue"
+  },
+  "Slider": {
+    "description": "Auto imported from components/slider.vue"
+  }
+}

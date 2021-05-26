@@ -21,18 +21,18 @@
           color="white"
           style="font-size: larger"
         >
-          Product
+          Dashboard
         </v-btn>
-        <!-- <v-btn
+        <v-btn
           text
           height="100%"
           href="/admin/productList"
           color="white"
           style="font-size: larger"
         >
-          Admin Product List
-        </v-btn> -->
-        <!-- <v-btn
+          Product List
+        </v-btn>
+        <v-btn
           text
           height="100%"
           href="/admin/addProduct"
@@ -40,7 +40,7 @@
           style="font-size: larger"
         >
           Add Products
-        </v-btn> -->
+        </v-btn>
         <v-btn
           text
           height="100%"
@@ -53,33 +53,23 @@
       </div>
 
       <v-spacer></v-spacer>
-      <v-badge
-        :value="logedIn ? (cartCount === '0' ? '' : cartCount) : null"
-        :content="cartCount"
-        color="orange"
-        overlap
-        class="mt-2"
-        style="margin-right: 15px"
-      >
-        <v-btn icon href="/user/cart"> <v-icon large> mdi-cart </v-icon></v-btn>
-      </v-badge>
-      <v-text-field
-        v-model="search"
-        hide-details
-        color="primary"
-        background-color="white"
-        class="shrink"
-        prepend-inner-icon="mdi-magnify"
-        single-line
-        label="Search"
-        rounded
-        filled
-        dense
-        @keyup="searchBox"
-      ></v-text-field>
-      <v-btn v-if="logedIn" plain color="white" @click="logout">
-        <v-icon>logout</v-icon>
-      </v-btn>
+      <v-menu offset-y>
+        <template #activator="{ on, attrs }">
+          <v-btn color="white" dark v-bind="attrs" outlined v-on="on">
+            Hello Admin <v-icon>mdi-chevron-down</v-icon>
+          </v-btn>
+        </template>
+
+        <v-list>
+          <v-list-item>
+            <v-list-item-title
+              ><v-btn v-if="logedIn" plain color="primary" @click="logout">
+                LogOut <v-icon> mdi-logout-variant</v-icon>
+              </v-btn></v-list-item-title
+            >
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </v-app-bar>
     <v-main>
       <nuxt />
@@ -120,28 +110,6 @@ import firebase from 'firebase/app'
 import 'firebase/auth'
 // import { db } from '../plugins/firebase'
 export default {
-  // async asyncData({ store }) {
-  //   // eslint-disable-next-line no-console
-  //   console.log('in async')
-  //   let product = []
-  //   // const uid = this.$store.getters['cart/getUid']
-  //   const uid = 'ixoneSe7HeUcnxlPYVY51vqoAEx1'
-  //   await db.ref(`users/${uid}/cartProduct`).on('value', (snapshot) => {
-  //     const data = snapshot.val()
-  //     if (data) {
-  //       // eslint-disable-next-line no-console
-  //       console.log(data)
-
-  //       product = Object.keys(data).map((i) => data[i])
-  //     }
-  //   })
-  //   // eslint-disable-next-line no-console
-  //   console.log(product.length)
-  //   return {
-  //     cartCountInIt: product.length,
-  //   }
-  // },
-  // props: { cartCount: { type: Number, default: 5 } },
   data() {
     return {
       search: '',
@@ -180,9 +148,6 @@ export default {
   created() {},
   methods: {
     logout() {
-      // this.$cookies.remove('logedIn')
-      // this.$store.commit('auth/clear')
-      // this.$router.push({ name: 'auth-login' })
       firebase
         .auth()
         .signOut()
